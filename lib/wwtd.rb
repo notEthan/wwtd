@@ -39,7 +39,7 @@ module WWTD
 
     def run(matrix, options, &block)
       with_clean_dot_bundle do
-        with_clean_env do
+        with_unbundled_env do
           Dir.mktmpdir do |lock|
             in_multiple_threads(matrix.each_with_index, options[:parallel]) do |config, i|
               # set env as parallel_tests does to reuse existing infrastructure
@@ -136,9 +136,9 @@ module WWTD
       cell.values_at(*exclude.keys) == exclude.values
     end
 
-    def with_clean_env(&block)
+    def with_unbundled_env(&block)
       if defined?(Bundler)
-        Bundler.with_clean_env(&block)
+        Bundler.with_unbundled_env(&block)
       else
         yield
       end
